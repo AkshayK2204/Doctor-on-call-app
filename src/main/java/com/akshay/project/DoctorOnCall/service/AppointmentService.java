@@ -84,4 +84,8 @@ public class AppointmentService {
 
 
     }
+
+    public List<Appointment> findAppointmentByDoctor(Doctor doctor) {
+        return appointmentRepository.findByDoctor(doctor);
+    }
 }

@@ -9,38 +9,25 @@
     <meta charset="UTF-8">
     <title>Doctor Dashboard</title>
     <style>
-        nav {
+        nav, thead {
             background-color: rgb(92, 111, 239);
         }
-
         .navbar-brand {
             font-weight: bold;
             color: white !important;
         }
-
-        th {
-            background-color: rgb(92, 111, 239);
-            color: black;
-        }
-
         .btn {
             background-color: rgb(92, 111, 239) !important;
             font-weight: 600;
         }
-
-        .table-header {
-            text-align: center;
-            background-color: rgb(92, 111, 239);
-            color: white;
-        }
-
         #dashboard_link {
             text-align: center;
             color: rgb(92, 111, 239) !important;
             background-color: white !important;
         }
-
-        .card-header {
+        .table-header {
+            text-align: center;
+            background-color: rgb(92, 111, 239);
             color: white;
         }
     </style>
@@ -49,8 +36,7 @@
 <body>
 <nav class="navbar navbar-expand-sm navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="/index"><i class="fa fa-files-o" aria-hidden="true" style="color: white;"></i>
-            Doctor on Call</a>
+        <a class="navbar-brand" href="/index"><i class="fa fa-files-o" aria-hidden="true" style="color: white;"></i> Doctor on Call</a>
         <div class="ml-auto">
             <a th:href="@{/logout}" class="btn" type="button" id="dashboard_link"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>&nbsp;&nbsp;
         </div>
@@ -58,74 +44,41 @@
 </nav>
 
 <main>
-    <div class="container p-3 mt-3">
-        <h2 class="text-center">Doctor Dashboard</h2>
-
-        <div class="analysis mt-5 mb-4 p-5" style="background-color: rgb(235, 241, 235);">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <div class="card bg-dark text-light text-center">
-                        <div class="card-body">
-                            <h5><i class="fa fa-folder text-light"></i> Total Appointments</h5>
-                            <h2 th:text="${totalAppointments}"></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card bg-primary text-light text-center">
-                        <div class="card-body">
-                            <h5><i class="fa fa-check text-light"></i> Total Booked</h5>
-                            <h2 th:text="${totalBooked}"></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card bg-warning text-light text-center">
-                        <div class="card-body">
-                            <h5><i class="fa fa-clock-o text-light"></i> Total Pending</h5>
-                            <h2 th:text="${totalPending}"></h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="container mt-5">
+        <h2>Appointments Dashboard</h2>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="table-header">
                 <tr>
-                    <th>SI.NO</th>
-                    <th>User Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Address</th>
                     <th>Appointment ID</th>
-                    <th>Service Type</th>
+                    <th>Patient Name</th>
+                    <th>Patient Age</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Blood Type</th>
                     <th>Appointment Date</th>
-                    <th>Required Time</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
                     <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="appointment, stat : ${appointments}">
-                    <td th:text="${stat.count}"></td>
-                    <td th:text="${appointment.userName}"></td>
-                    <td th:text="${appointment.email}"></td>
-                    <td th:text="${appointment.phone}"></td>
+                <tr th:each="appointment : ${doctorAppList}">
+                    <td th:text="${appointment.appId}"></td>
+                    <td th:text="${appointment.name}"></td>
+                    <td th:text="${appointment.age}"></td>
+                    <td th:text="${appointment.phoneNumber}"></td>
                     <td th:text="${appointment.address}"></td>
-                    <td th:text="${appointment.appointmentId}"></td>
-                    <td th:text="${appointment.serviceType}"></td>
-                    <td th:text="${appointment.appointmentDate}"></td>
-                    <td th:text="${appointment.appointmentDuration}"></td>
+                    <td th:text="${appointment.bloodType}"></td>
+                    <td th:text="${appointment.date}"></td>
+                    <td th:text="${appointment.startTime}"></td>
+                    <td th:text="${appointment.endTime}"></td>
                     <td th:text="${appointment.status}"></td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(appointments)}">
-                    <td colspan="10" class="text-center text-danger"><h6>No Data Available</h6></td>
+                <tr th:if="${#lists.isEmpty(doctorAppList)}">
+                    <td colspan="10" class="text-center text-danger"><h6>No Appointments Available</h6></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-</main>
-</body>
-</html>
+
