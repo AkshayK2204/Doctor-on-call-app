@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Appointment Confirmation</title>
+</head>
+<body>
+<h2>Appointment Confirmation</h2>
+<p>Thank you, your appointment has been booked successfully!</p>
+<p>Appointment ID: <span th:text="${appointment.appId}"></span></p>
+<p>Patient ID: <span th:text="${patient_id}"></span></p>
+<p>Doctor ID: <span th:text="${doctor_id}"></span></p>
+<p>Date: <span th:text="${appointment.date}"></span></p>
+<p>Time: <span th:text="${appointment.startTime}"></span> - <span th:text="${appointment.endTime}"></span></p>
+<!-- Add more fields as necessary -->
+</body>
+</html>

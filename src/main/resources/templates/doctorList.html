@@ -1,0 +1,153 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Doctor List</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="styles.css"> &lt;!&ndash; Optional: link to your CSS file &ndash;&gt;-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Available Doctors</h2>-->
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>Doctor ID</th>-->
+<!--        <th>Name</th>-->
+<!--        <th>Specialization</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="doctor : ${doctorsList}">-->
+<!--        <td th:text="${doctor.doc_id}"></td>-->
+<!--        <td th:text="${doctor.doc_name}"></td>-->
+<!--        <td th:text="${doctor.doc_specialization}"></td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3301/3301556.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Doctor List</title>
+    <style>
+        nav {
+            background-color: rgb(92, 111, 239);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+
+        th {
+            background-color: rgb(92, 111, 239);
+            color: black;
+        }
+
+        .btn {
+            background-color: rgb(92, 111, 239) !important;
+            font-weight: 600;
+        }
+
+        .table-header {
+            text-align : center;
+            background-color: rgb(92, 111, 239);
+            color: white;
+        }
+
+        #dashboard_link {
+            text-align: center;
+            color: rgb(92, 111, 239) !important;
+            background-color: white !important;
+        }
+
+        .analysis {
+            background-color: rgb(235, 241, 235);
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-sm navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="/index"><i class="fa fa-files-o" aria-hidden="true" style="color: white;"></i>
+            Doctor on Call</a>
+        <div class="ml-auto">
+            <a th:href="@{/logout}" class="btn" type="button" id="dashboard_link"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>&nbsp;&nbsp;
+        </div>
+    </div>
+</nav>
+
+<main>
+<!--    <div class="container p-3 mt-3">-->
+<!--        &lt;!&ndash; Analysis Section &ndash;&gt;-->
+<!--        <div class="analysis mt-5 mb-4 p-5">-->
+<!--            <div class="row row-cols-1 row-cols-md-3 g-4">-->
+<!--                <div class="col">-->
+<!--                    <div class="card bg-dark">-->
+<!--                        <div class="card-body text-center text-light">-->
+<!--                            <h5 style="color: white;"><i class="fa fa-folder text-light"></i> Total Doctors</h5>-->
+<!--                            <h2 class="text text-center text-light" th:text="${totalDoctors}"></h2>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col">-->
+<!--                    <div class="card bg-primary">-->
+<!--                        <div class="card-body text-center text-light">-->
+<!--                            <h5 style="color: white;"><i class="fa fa-check text-light"></i> Total Appointments</h5>-->
+<!--                            <h2 class="text text-center text-light" th:text="${totalAppointments}"></h2>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col">-->
+<!--                    <div class="card bg-warning">-->
+<!--                        <div class="card-body text-center text-light">-->
+<!--                            <h5 style="color: white;"><i class="fa fa-clock-o text-light"></i> Total Pendings</h5>-->
+<!--                            <h2 class="text text-center text-light" th:text="${totalPending}"></h2>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <br>
+    <div class="container">
+        <h2>Available Doctors</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class ="table-header">
+                <tr>
+                    <th>Doctor ID</th>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doctor : ${doctorsList}">
+                    <td th:text="${doctor.doc_id}"></td>
+                    <td>
+                        <a th:href="@{/user/{patient_id}/doctors/{doctorId}/appointment(doctorId=${doctor.doc_id},patient_id=${patient_id})}" th:text="${doctor.doc_name}"></a>
+                    </td>
+                    <td th:text="${doctor.doc_specialization}"></td>
+                </tr>
+                <tr th:if="${doctorsList.size() == 0}">
+                    <td colspan="3" class="text-center text-danger"><h6>No Doctors Available</h6></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
