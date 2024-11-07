@@ -32,8 +32,15 @@ public class DoctorController {
         System.out.println("Loading doctor homepage...");
         System.out.println(model.getAttribute("doctor_id"));
         Doctor doctor = doctorService.findById(doctor_id);
+        model.addAttribute("doctorName",doctor.getName());
         List<Appointment> doctorAppointments = appointmentService.findAppointmentByDoctor(doctor);
         model.addAttribute("doctorAppList", doctorAppointments);
-        return "doctorHome";
+        int totalAppointments = appointmentService.countAllAppointment(doctorAppointments);
+        model.addAttribute("totalAppointments",totalAppointments);
+        int completedAppointments = appointmentService.countCompletedAppointment(doctorAppointments);
+        model.addAttribute("totalCompleted",completedAppointments);
+        int pendingAppointments = appointmentService.countPendingAppointment(doctorAppointments);
+        model.addAttribute("totalPending",pendingAppointments);
+        return "dashboard";
     }
 }

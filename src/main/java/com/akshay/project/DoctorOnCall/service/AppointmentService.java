@@ -88,4 +88,42 @@ public class AppointmentService {
     public List<Appointment> findAppointmentByDoctor(Doctor doctor) {
         return appointmentRepository.findByDoctor(doctor);
     }
+
+    public int countAllAppointment(List<Appointment> doctorAppointments){
+        return doctorAppointments.size();
+    }
+
+    public int countCompletedAppointment(List<Appointment> doctorAppointments){
+        return (int) doctorAppointments.stream().filter(appointment -> appointment.getStatus()==APP_STATUS.COMPLETED).count();
+    }
+
+    public int countPendingAppointment(List<Appointment> doctorAppointments) {
+        return countAllAppointment(doctorAppointments) - countCompletedAppointment(doctorAppointments);
+    }
+
+    public Appointment updateAppointment(Long appId,AppReqDTO appUpdateDTO) {
+        Appointment appointment = appointmentRepository.findByAppId(appId);
+        appointment.setName(appUpdateDTO.getName());
+        appointment.setAge(appUpdateDTO.getAge());
+        appointment.setPhoneNumber(appUpdateDTO.getPhoneNumber());
+        appointment.setAddress(appUpdateDTO.getAddress());
+        appointment.setBloodType(appUpdateDTO.getBloodType());
+        appointment.setStartTime(appUpdateDTO.getStartTime());
+        appointment.setEndTime(appUpdateDTO.getEndTime());
+        appointment.setDate(appUpdateDTO.getDate());
+        appointmentRepository.save(appointment);
+        return appointmentRepository.findByAppId(appId);
+
+    }
+
+    public boolean cancelAppointment(Long appId) {
+        Appointment appointment= appointmentRepository.findByAppId(appId);
+
+        if(appointment.getStatus()==APP_STATUS.CANCELLED || appointment.getStatus()==APP_STATUS.COMPLETED ){
+            return false;
+        }
+        appointment.setStatus(APP_STATUS.CANCELLED);
+        appointmentRepository.save(appointment);
+        return true;
+    }
 }

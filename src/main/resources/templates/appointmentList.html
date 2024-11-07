@@ -65,6 +65,7 @@
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,6 +75,10 @@
                     <td th:text="${appointment.startTime}"></td>
                     <td th:text="${appointment.endTime}"></td>
                     <td th:text="${appointment.status}"></td>
+                    <td>
+                        <a th:href="@{/user/{patient_id}/appointments/{app_id}/cancel(patient_id=${patient_id}, app_id=${appointment.appId})}"
+                           class="btn btn-danger">Cancel Appointment</a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(appList)}">
                     <td colspan="5" class="text-center text-danger"><h6>No Appointments Found</h6></td>

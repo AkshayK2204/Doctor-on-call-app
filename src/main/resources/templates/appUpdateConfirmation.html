@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Appointment Update Confirmation</title>
 </head>
 <body>
-$END$
+<h2>Appointment Update Confirmation</h2>
+<p>Thank you, your appointment has been updated successfully!</p>
+<p>Appointment ID: <span th:text="${updatedAppointment.appId}"></span></p>
+<p>Patient ID: <span th:text="${patient_id}"></span></p>
+<p>Doctor ID: <span th:text="${doctor_id}"></span></p>
+<p>Date: <span th:text="${updatedAppointment.date}"></span></p>
+<p>Time: <span th:text="${updatedAppointment.startTime}"></span> - <span th:text="${updatedAppointment.endTime}"></span></p>
+<!-- Add more fields as necessary -->
+
+<a th:href="@{/user/{patient_id}/appointments/view(patient_id=${patient_id})}" class="btn btn-primary">
+    Back to appointments
+</a>
+
+
+
 </body>
 </html>

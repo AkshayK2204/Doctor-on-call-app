@@ -106,8 +106,6 @@ public class AuthController {
         if (user1.isPresent()) {
             User user = user1.get();
             System.out.println("Login successful for user: " + user.getEmail());
-            // Logic for successful login, such as setting session attributes
-            //model.addAttribute("registerDTO", registerDTO);
 
             switch (user.getRole()) {
                 case ROLE_DOCTOR:
@@ -120,7 +118,6 @@ public class AuthController {
                     Patient patient = (Patient) user;
                     Long patientId = patient.getId();
                     return String.format("redirect:/user/%d/dashboard",patientId);
-                    //return String.format("redirect:/user/%d/doctors",patientId);
                 case ROLE_ADMIN:
                     System.out.println("3333333333");
                     return "redirect:/admin/home";
