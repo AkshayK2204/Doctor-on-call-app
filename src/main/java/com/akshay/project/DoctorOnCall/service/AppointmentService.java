@@ -1,6 +1,7 @@
 package com.akshay.project.DoctorOnCall.service;
 
 import com.akshay.project.DoctorOnCall.dtos.AppReqDTO;
+import com.akshay.project.DoctorOnCall.dtos.OpenTimesDTO;
 import com.akshay.project.DoctorOnCall.entity.Appointment;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.entity.Patient;
@@ -11,6 +12,9 @@ import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,8 +89,20 @@ public class AppointmentService {
 
     }
 
-    public List<Appointment> findAppointmentByDoctor(Doctor doctor) {
-        return appointmentRepository.findByDoctor(doctor);
+    public List<Appointment> findOpenAppointmentByDoctor(Doctor doctor) {
+        return appointmentRepository.findByDoctor(doctor)
+                .stream()
+                .filter(appointment ->
+                        appointment.getStatus() == APP_STATUS.OPEN)
+                .toList();
+    }
+
+    public List<Appointment> findBookedAppointmentByDoctor(Doctor doctor) {
+        return appointmentRepository.findByDoctor(doctor)
+                .stream()
+                .filter(appointment ->
+                        appointment.getStatus() == APP_STATUS.SCHEDULED)
+                .toList();
     }
 
     public int countAllAppointment(List<Appointment> doctorAppointments){
@@ -125,5 +141,28 @@ public class AppointmentService {
         appointment.setStatus(APP_STATUS.CANCELLED);
         appointmentRepository.save(appointment);
         return true;
+    }
+
+    public List<Appointment> getOpenAppointments(OpenTimesDTO openTimesDTO, Doctor doctor) {
+        List<Appointment> openAppointments = new ArrayList<>();
+        LocalTime start = openTimesDTO.getStartTime();
+        LocalTime end = openTimesDTO.getEndTime();
+        LocalDate day=openTimesDTO.getDate();
+
+        while (!start.isAfter(end.minusMinutes(30))) {
+            Appointment appointment = new Appointment();
+            appointment.setDoctor(doctor);
+            appointment.setStartTime(start);
+            appointment.setEndTime(start.plusMinutes(30));
+            appointment.setDate(day);
+            appointment.setStatus(APP_STATUS.OPEN);
+            openAppointments.add(appointment);
+            start = start.plusMinutes(30);
+        }
+        return openAppointments;
+    }
+
+    public void saveAll(List<Appointment> openAppointmentList) {
+        appointmentRepository.saveAll(openAppointmentList);
     }
 }

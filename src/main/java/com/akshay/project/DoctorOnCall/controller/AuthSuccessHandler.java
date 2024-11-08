@@ -22,14 +22,9 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
         System.out.println("Login successfullllllll for user: " + authentication.getName());
 
-
-
-
-
 //        String redirectUrl = "/index";
 
         System.out.println("AuthSuccessHandler is working............");
-
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DOCTOR"))) {
             response.sendRedirect("/doctor/home");

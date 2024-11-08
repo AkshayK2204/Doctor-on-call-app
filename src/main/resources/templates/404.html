@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Open Times Confirmation</title>
 </head>
 <body>
-404 error...
+<h2>Open Times Confirmation</h2>
+<p>Thank you, your available time is updated successfully!</p>
+<p>Doctor <span th:text="${doctorName}"></span></p>
+<p>Patient ID: <span th:text="${patient_id}"></span></p>
+<p>Doctor ID: <span th:text="${doctor_id}"></span></p>
+<p>Date: <span th:text="${appointment.date}"></span></p>
+<p>Time: <span th:text="${appointment.startTime}"></span> - <span th:text="${appointment.endTime}"></span></p>
+<!-- Add more fields as necessary -->
 </body>
 </html>

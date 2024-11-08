@@ -6,6 +6,7 @@ import com.akshay.project.DoctorOnCall.dtos.DoctorDTO;
 import com.akshay.project.DoctorOnCall.entity.Appointment;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.entity.Patient;
+import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
 import com.akshay.project.DoctorOnCall.service.AppointmentService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
@@ -111,7 +112,6 @@ public class PatientController {
         model.addAttribute("updatedAppointment", updatedAppointment);
         model.addAttribute("patient_id",patient_id);
         return "appUpdateConfirmation";
-
     }
 
     @GetMapping("/user/{patient_id}/appointments/{app_id}/cancel")
@@ -123,10 +123,15 @@ public class PatientController {
         else{
             model.addAttribute("message", "Cancellation failed...");
         }
-
         return String.format("redirect:/user/%d/appointments/view",patient_id);
     }
+
+    @GetMapping("/user/{patient_id}/doctor/{doctor_id}/open-times")
+    public String getAvailableSlot(@PathVariable Long doctor_id, Model model){
+        Doctor doctor = doctorService.findById(doctor_id);
+        List<Appointment> openAppointments =appointmentService.findOpenAppointmentByDoctor(doctor).stream().filter(appointment -> appointment.getStatus() == APP_STATUS.OPEN).toList();
+        model.addAttribute("openAppointments",openAppointments);
+        return "openTimesList";
+    }
 }
-
-
 
