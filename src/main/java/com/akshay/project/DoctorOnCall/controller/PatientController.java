@@ -10,6 +10,7 @@ import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
 import com.akshay.project.DoctorOnCall.service.AppointmentService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @Operation(summary = "Displays patient's dashboard")
     @GetMapping("/user/{patient_id}/dashboard")
     public String getPatientHome(@PathVariable Long patient_id, HttpSession session, Model model) {
         System.out.println("Session ID: " + session.getId());
@@ -43,6 +45,7 @@ public class PatientController {
         return "patientHome";
     }
 
+    @Operation(summary = "Displays all available doctors for a patient")
     @GetMapping("/user/{patient_id}/doctors")
     public String showAllDoctors(@PathVariable Long patient_id, Model model) {
         List<DoctorDTO> doctors = doctorService.getAllDoctors();
@@ -51,6 +54,8 @@ public class PatientController {
         return "doctorList";
     }
 
+
+    @Operation(summary = "Shows form to book an appointment with a doctor")
     @GetMapping("/user/{patient_id}/doctors/{doctor_id}/appointment")
     public String showAppointmentForm(@PathVariable Long patient_id,@PathVariable Long doctor_id, Model model) {
         System.out.println("Appointment form loaded...");
@@ -60,6 +65,7 @@ public class PatientController {
         return "appointmentForm";
     }
 
+    @Operation(summary = "Books an appointment with a doctor")
     @PostMapping("/user/{patient_id}/doctors/{doctor_id}/appointment")
     public String bookAppointment(@PathVariable Long patient_id,@PathVariable Long doctor_id, @Valid @ModelAttribute("appReqDTO") AppReqDTO appReqDTO, Model model) {
         System.out.println("Entering bookAppointment controller method");
@@ -72,6 +78,7 @@ public class PatientController {
         return String.format("redirect:/user/%d/doctors/%d/appointment/book/%d", patient_id,doctor_id, app_id);
     }
 
+    @Operation(summary = "Confirms the booking of an appointment")
     @GetMapping("/user/{patient_id}/doctors/{doctor_id}/appointment/book/{app_id}")
     public String appointmentConfirmation(@PathVariable Long patient_id,@PathVariable Long doctor_id, @PathVariable Long app_id, Model model) {
         Appointment appointment = appointmentService.getAppointmentById(app_id);
@@ -82,6 +89,7 @@ public class PatientController {
         return "appointmentConfirmation";
     }
 
+    @Operation(summary = "Displays all appointments of a patient")
     @GetMapping("/user/{patient_id}/appointments/view")
     public String viewAppointments(@PathVariable Long patient_id, Model model){
         List<Appointment> appList = appointmentService.findByPatient(patient_id);
@@ -89,6 +97,8 @@ public class PatientController {
         return "appointmentList";
     }
 
+
+    @Operation(summary = "Shows form to edit an appointment")
     @GetMapping("/user/{patient_id}/appointments/{app_id}/edit")
     public String appUpdateForm(@PathVariable Long patient_id,@PathVariable Long app_id, Model model){
         Appointment appointment = appointmentService.getAppointmentById(app_id);
@@ -106,6 +116,8 @@ public class PatientController {
         return "appUpdateForm";
     }
 
+
+    @Operation(summary = "Updates an existing appointment")
     @PostMapping("/user/{patient_id}/appointments/{app_id}/edit")
     public String updateAppointment(@PathVariable Long app_id,@PathVariable Long patient_id,@Valid @ModelAttribute("appUpdateDTO") AppReqDTO appUpdateDTO ,Model model){
         Appointment updatedAppointment =appointmentService.updateAppointment(app_id,appUpdateDTO);
@@ -114,6 +126,7 @@ public class PatientController {
         return "appUpdateConfirmation";
     }
 
+    @Operation(summary = "Cancels an appointment")
     @GetMapping("/user/{patient_id}/appointments/{app_id}/cancel")
     public String cancelAppointment(@PathVariable Long patient_id,@PathVariable Long app_id, Model model){
         boolean isCancelled = appointmentService.cancelAppointment(app_id);
@@ -126,6 +139,8 @@ public class PatientController {
         return String.format("redirect:/user/%d/appointments/view",patient_id);
     }
 
+
+    @Operation(summary = "Displays available time slots for a specific doctor")
     @GetMapping("/user/{patient_id}/doctor/{doctor_id}/open-times")
     public String getAvailableSlot(@PathVariable Long doctor_id, Model model){
         Doctor doctor = doctorService.findById(doctor_id);

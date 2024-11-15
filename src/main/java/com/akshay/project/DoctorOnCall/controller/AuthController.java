@@ -6,11 +6,21 @@ import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.entity.Patient;
 import com.akshay.project.DoctorOnCall.entity.User;
 import com.akshay.project.DoctorOnCall.enums.ROLE;
+import com.akshay.project.DoctorOnCall.service.CustomUserDetailsService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
 import com.akshay.project.DoctorOnCall.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,16 +36,20 @@ public class AuthController {
     private final DoctorService doctorService;
     private final PatientService patientService;
     private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Autowired
-    public AuthController(DoctorService doctorService, PatientService patientService, UserService userService) {
+    public AuthController(DoctorService doctorService, PatientService patientService, UserService userService, CustomUserDetailsService customUserDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.doctorService = doctorService;
         this.patientService = patientService;
         this.userService = userService;
+        this.customUserDetailsService = customUserDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-
+    @Operation(summary = "Show registration form")
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         System.out.println("Registration Form loaded...");
@@ -43,6 +57,7 @@ public class AuthController {
         return "register";
     }
 
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     public String registerUser(@ModelAttribute RegisterDTO registerDTO, Model model) {
         model.addAttribute("user", registerDTO);
@@ -75,49 +90,53 @@ public class AuthController {
         }
     }
 
-
+    @Operation(summary = "Show login form with success or error messages")
     @GetMapping("/customLogin")
     public String showLoginForm(@RequestParam(value = "success", required = false) String success,
                                 @RequestParam(value = "error", required = false) String error,
                                 Model model) {
         model.addAttribute("loginDTO", new LoginDTO());
-        System.out.println(
-                "Login page loaded"
-        );
+        System.out.println("Login page loaded");
         if (success != null) {
             model.addAttribute("success", "Registration successful! Please log in.");
-
         }
         if (error != null) {
             model.addAttribute("error", "Login failed! Please try again.");
-            //return "redirect:/index";
         }
-
         return "login";
     }
 
+    @Operation(summary = "Process user login")
     @PostMapping(value = "/customLogin")
-    public String loginUser(@Valid @ModelAttribute LoginDTO loginDTO, Model model) {
-        System.out.println(
-                "Login processing.."
-        );
+    public String loginUser(@Valid @ModelAttribute LoginDTO loginDTO, Model model, HttpSession session) {
+        System.out.println("Login processing..");
         Optional<? extends User> user1 = userService.authenticateUser(loginDTO.getLog_email(), loginDTO.getLog_password());
 
         if (user1.isPresent()) {
             User user = user1.get();
             System.out.println("Login successful for user: " + user.getEmail());
-
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, loginDTO.getLog_password(), userDetails.getAuthorities());
+            if (bCryptPasswordEncoder.matches(loginDTO.getLog_password(), userDetails.getPassword())) {
+                SecurityContext securityContext = SecurityContextHolder.getContext();
+                securityContext.setAuthentication(authToken);
+                session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+            }
+            else {
+                throw new BadCredentialsException("Invalid password");
+            }
             switch (user.getRole()) {
                 case ROLE_DOCTOR:
                     System.out.println("111111111");
                     Doctor doctor = (Doctor) user;
                     Long doctorId = doctor.getId();
-                    return String.format("redirect:/doctor/%d/dashboard",doctorId);
+                    return String.format("redirect:/doctor/%d/dashboard", doctorId);
                 case ROLE_PATIENT:
                     System.out.println("222222222");
                     Patient patient = (Patient) user;
                     Long patientId = patient.getId();
-                    return String.format("redirect:/user/%d/dashboard",patientId);
+                    return String.format("redirect:/user/%d/dashboard", patientId);
                 case ROLE_ADMIN:
                     System.out.println("3333333333");
                     return "redirect:/admin/home";
@@ -125,7 +144,6 @@ public class AuthController {
                     System.out.println("44444444444");
                     return "redirect:/index";
             }
-
         } else {
             System.out.println("Login failed for email: " + loginDTO.getLog_email());
             model.addAttribute("error", "Invalid email or password");
@@ -133,11 +151,14 @@ public class AuthController {
         }
     }
 
+        @Operation(summary = "Show the home page")
+        @GetMapping("/index")
+        public String getHomePage () {
+            return "index";
+        }
 
-    @GetMapping("/index")
-    public String getHomePage() {
-        return "index";
+        @GetMapping("/403")
+        public String get403Error(){
+            return "403";
+        }
     }
-
-
-}

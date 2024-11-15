@@ -4,6 +4,7 @@ import com.akshay.project.DoctorOnCall.enums.GENDER;
 import com.akshay.project.DoctorOnCall.enums.ROLE;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 @Data
 @MappedSuperclass
 public abstract class User implements UserDetails {
@@ -25,6 +27,7 @@ public abstract class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+
     @Enumerated(EnumType.STRING)
     private ROLE role;
 
@@ -35,13 +38,19 @@ public abstract class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Convert the user's role to GrantedAuthority
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        String authority = role.name().replace("ROLE_", "");
+        return List.of(new SimpleGrantedAuthority("ROLE_" + authority));
     }
+
 
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public String getPassword(){
+        return password;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.service.AppointmentService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,21 +20,24 @@ import java.util.List;
 @Controller
 public class DoctorController {
 
-    private AppointmentService appointmentService;
-    private DoctorService doctorService;
-    private PatientService patientService;
+    private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
+    private final PatientService patientService;
+
+
 
     @Autowired
-    public void PatientController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
+    public DoctorController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
         this.appointmentService = appointmentService;
         this.doctorService = doctorService;
         this.patientService = patientService;
     }
 
+    @Operation(summary = "Displays the doctor's dashboard with appointment statistics and details")
     @GetMapping("doctor/{doctor_id}/dashboard")
     public String getDoctorHome(@PathVariable Long doctor_id, Model model) {
         System.out.println("Loading doctor homepage...");
-        System.out.println(model.getAttribute("doctor_id"));
+        System.out.println(doctor_id);
         Doctor doctor = doctorService.findById(doctor_id);
         model.addAttribute("doctorName",doctor.getName());
         List<Appointment> doctorAppointments = appointmentService.findBookedAppointmentByDoctor(doctor);
@@ -47,6 +51,7 @@ public class DoctorController {
         return "dashboard";
     }
 
+    @Operation(summary = "Displays form for doctor to set available open times")
     @GetMapping("/doctor/{doctor_id}/open-times")
     public String openTimesForm(@PathVariable Long doctor_id,Model model){
         model.addAttribute("openTimesDTO",new OpenTimesDTO());
@@ -54,11 +59,13 @@ public class DoctorController {
         return "openTimesForm";
     }
 
+    @Operation(summary = "Saves the doctor's open times and redirects to the dashboard")
     @PostMapping("/doctor/{doctor_id}/open-times")
     public String addOpenTimes(@PathVariable Long doctor_id, @ModelAttribute OpenTimesDTO openTimesDTO,Model model){
         Doctor doctor = doctorService.findById(doctor_id);
         model.addAttribute("doctorName",doctor.getName());
-        List<Appointment> openAppointmentList =appointmentService.getOpenAppointments(openTimesDTO,doctor);
+
+        List<Appointment> openAppointmentList = appointmentService.getOpenAppointments(openTimesDTO,doctor);
         model.addAttribute("openAppointmentList",openAppointmentList);
         appointmentService.saveAll(openAppointmentList);
         return String.format("redirect:/doctor/%d/dashboard",doctor_id);

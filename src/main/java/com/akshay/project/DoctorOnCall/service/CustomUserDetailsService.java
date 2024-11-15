@@ -5,14 +5,12 @@ import com.akshay.project.DoctorOnCall.entity.Patient;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -27,20 +25,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Patient> patient = patientRepository.findByEmail(username);
         if (patient.isPresent()) {
-            return new User(
-                    patient.get().getEmail(),
-                    patient.get().getPassword(),
-                    Collections.singleton(new SimpleGrantedAuthority(patient.get().getRole().name()))
-            );
+            var userObj = patient.get();
+            return User.builder()
+                    .username(userObj.getEmail())
+                    .password(userObj.getPassword())
+                    .roles("PATIENT")
+                    .build();
         }
-
         Optional<Doctor> doctor = doctorRepository.findByEmail(username);
         if (doctor.isPresent()) {
-            return new User(
-                    doctor.get().getEmail(),
-                    doctor.get().getPassword(),
-                    Collections.singleton(new SimpleGrantedAuthority(doctor.get().getRole().name()))
-            );
+            var userObj= doctor.get();
+            return User.builder()
+                    .username(userObj.getEmail())
+                    .password(userObj.getPassword())
+                    .roles("DOCTOR")
+                    .build();
         }
         throw new UsernameNotFoundException("User not found: " + username);
     }

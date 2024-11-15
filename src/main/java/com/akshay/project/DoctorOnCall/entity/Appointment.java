@@ -4,10 +4,7 @@ import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
 import com.akshay.project.DoctorOnCall.enums.BLOOD_TYPE;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +14,7 @@ import java.time.LocalTime;
 @Entity
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

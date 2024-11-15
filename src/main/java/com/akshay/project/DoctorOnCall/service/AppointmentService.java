@@ -106,7 +106,7 @@ public class AppointmentService {
     }
 
     public int countAllAppointment(List<Appointment> doctorAppointments){
-        return doctorAppointments.size();
+        return doctorAppointments.stream().filter(appointment -> appointment.getStatus()!=APP_STATUS.OPEN).toList().size();
     }
 
     public int countCompletedAppointment(List<Appointment> doctorAppointments){
@@ -127,6 +127,7 @@ public class AppointmentService {
         appointment.setStartTime(appUpdateDTO.getStartTime());
         appointment.setEndTime(appUpdateDTO.getEndTime());
         appointment.setDate(appUpdateDTO.getDate());
+        appointment.setStatus(APP_STATUS.SCHEDULED);
         appointmentRepository.save(appointment);
         return appointmentRepository.findByAppId(appId);
 
