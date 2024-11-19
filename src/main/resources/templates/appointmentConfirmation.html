@@ -12,5 +12,9 @@
 <p>Date: <span th:text="${appointment.date}"></span></p>
 <p>Time: <span th:text="${appointment.startTime}"></span> - <span th:text="${appointment.endTime}"></span></p>
 <!-- Add more fields as necessary -->
+
+<a th:href="@{/user/{patient_id}/appointments/view(patient_id=${patient_id})}" class="btn btn-primary">
+  Back to appointments
+</a>
 </body>
 </html>

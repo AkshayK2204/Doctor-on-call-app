@@ -139,6 +139,17 @@
             </table>
         </div>
 
+
+        <div>
+            <a th:href="@{/doctor/{doctor_id}/open-times(doctor_id=${doctor_id})}" class="btn btn-primary">
+                Add open times
+            </a>
+        </div>
+        <div>
+            <a th:href="@{/doctor/{doctor_id}/open-times/view(doctor_id=${doctor_id})}" class="btn btn-primary">
+                View open times
+            </a>
+        </div>
 </main>
 
 </body>

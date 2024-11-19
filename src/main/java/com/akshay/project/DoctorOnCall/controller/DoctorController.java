@@ -2,6 +2,7 @@ package com.akshay.project.DoctorOnCall.controller;
 
 import com.akshay.project.DoctorOnCall.dtos.OpenTimesDTO;
 import com.akshay.project.DoctorOnCall.entity.Appointment;
+import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.service.AppointmentService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
@@ -51,6 +52,27 @@ public class DoctorController {
         return "dashboard";
     }
 
+
+
+
+
+
+    @Operation(summary = "Displays available time slots for a specific doctor")
+    @GetMapping("/doctor/{doctor_id}/open-times/view")
+    public String getAvailableSlot(@PathVariable Long doctor_id, Model model){
+        Doctor doctor = doctorService.findById(doctor_id);
+        List<Availability> availabilityList = doctor.getAvailabilityList();
+        if (availabilityList == null || availabilityList.isEmpty()) {
+            System.out.println("No availability found for doctor with ID: " + doctor_id);
+        }
+        System.out.println(availabilityList);
+        model.addAttribute("availabilityList",availabilityList);
+//        Map<LocalDate, List<LocalTime>> openAppointmentMap = doctor.getAvailabilityMap();
+//        model.addAttribute("openAppointmentMap",openAppointmentMap);
+        return "openTimesList";
+    }
+
+
     @Operation(summary = "Displays form for doctor to set available open times")
     @GetMapping("/doctor/{doctor_id}/open-times")
     public String openTimesForm(@PathVariable Long doctor_id,Model model){
@@ -65,11 +87,29 @@ public class DoctorController {
         Doctor doctor = doctorService.findById(doctor_id);
         model.addAttribute("doctorName",doctor.getName());
 
-        List<Appointment> openAppointmentList = appointmentService.getOpenAppointments(openTimesDTO,doctor);
-        model.addAttribute("openAppointmentList",openAppointmentList);
-        appointmentService.saveAll(openAppointmentList);
-        return String.format("redirect:/doctor/%d/dashboard",doctor_id);
-    }
 
+        Availability availability = appointmentService.getOpenAppointments(openTimesDTO,doctor);
+        model.addAttribute("availability",availability);
+//        if(openAppointmentMap.isEmpty()) {
+//            model.addAttribute("NoAppointmentFound", "No open appointments available for the given times.");
+////            return String.format("redirect:/doctor/%d/dashboard", doctor_id);
+//            return "openTimesConfirmation";
+//        }
+//        appointmentService.saveAll(openAppointmentList);
+//        doctorService.saveAvailabilityMap(openAppointmentMap);
+
+//        Map<LocalDate,List<LocalTime>> openAppointmentsMap = new HashMap<>();
+//        for (Appointment appointment : openAppointmentList) {
+//            LocalDate date = appointment.getDate();
+//            LocalTime time = appointment.getStartTime();
+//            openAppointmentsMap.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
+//        }
+
+
+//        model.addAttribute("openAppointmentMap",openAppointmentMap);
+
+//        return "openTimesConfirmation";
+        return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
+    }
 
 }

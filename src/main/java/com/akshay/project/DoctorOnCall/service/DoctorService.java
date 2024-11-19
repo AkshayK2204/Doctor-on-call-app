@@ -1,13 +1,17 @@
 package com.akshay.project.DoctorOnCall.service;
 
 import com.akshay.project.DoctorOnCall.dtos.DoctorDTO;
+import com.akshay.project.DoctorOnCall.entity.Appointment;
+import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
+import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,6 +60,39 @@ public class DoctorService extends UserService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
         return doctorOptional.orElse(null);
     }
+
+//    public void saveAvailabilityMap(Map<LocalDate, List<LocalTime>> openAppointmentMap) {
+//        doctorRepository.save(openAppointmentMap);
+//    }
+
+    public void updateAvailability(Appointment appointment) {
+        System.out.println("Updating availability...");
+        Doctor doctor = appointment.getDoctor();
+        List<Availability> availabilityList= doctor.getAvailabilityList();
+        if (availabilityList == null) {
+            throw new IllegalStateException("Doctor's availability list is null");
+        }
+        availabilityList.stream()
+            .filter(availability ->
+                    availability.getDate().equals(appointment.getDate()))
+            .findFirst()
+            .ifPresent(availability -> {
+                List<LocalTime> openTimes = availability.getOpenTimes();
+                if(appointment.getStatus().equals(APP_STATUS.CANCELLED)){
+                    openTimes.add(appointment.getStartTime());
+                }
+                else {
+                    if (!openTimes.remove(appointment.getStartTime())) {
+                        throw new IllegalArgumentException("Time slot not available for removal");
+                    }
+                }
+                availability.setOpenTimes(openTimes);
+            });
+        doctor.setAvailabilityList(availabilityList);
+        doctorRepository.save(doctor);
+
+    }
+
 
     //DoctorAvailabilityDto getDoctorAvailability(Long doctorId);
 }

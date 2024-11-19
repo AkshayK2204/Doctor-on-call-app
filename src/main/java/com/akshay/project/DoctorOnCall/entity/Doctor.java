@@ -3,22 +3,27 @@ package com.akshay.project.DoctorOnCall.entity;
 import com.akshay.project.DoctorOnCall.enums.GENDER;
 import com.akshay.project.DoctorOnCall.enums.ROLE;
 import com.akshay.project.DoctorOnCall.enums.SPECIALIZATION;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "doctors")
 public class Doctor extends User {
 
      SPECIALIZATION specialization;
+//     private HashMap<LocalDate, List<LocalTime>> availabilityMap;
+
+     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @JsonManagedReference
+     private List<Availability> availabilityList;
 
     public Doctor(String name, String email, String password, ROLE role, GENDER gender, SPECIALIZATION specialization) {
         this.setName(name);

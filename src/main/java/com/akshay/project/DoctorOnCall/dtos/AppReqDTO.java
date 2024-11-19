@@ -31,5 +31,14 @@ public class AppReqDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
 
-
+    public AppReqDTO(String name, long age, String phoneNumber, String address, BLOOD_TYPE bloodType, LocalTime startTime, LocalDate date) {
+        this.name = name;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.bloodType = bloodType;
+        this.startTime = startTime;
+        this.endTime=startTime.plusMinutes(30);
+        this.date = date;
+    }
 }
