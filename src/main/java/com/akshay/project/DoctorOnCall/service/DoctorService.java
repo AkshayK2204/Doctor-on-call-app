@@ -61,9 +61,6 @@ public class DoctorService extends UserService {
         return doctorOptional.orElse(null);
     }
 
-//    public void saveAvailabilityMap(Map<LocalDate, List<LocalTime>> openAppointmentMap) {
-//        doctorRepository.save(openAppointmentMap);
-//    }
 
     public void updateAvailability(Appointment appointment) {
         System.out.println("Updating availability...");
@@ -93,6 +90,4 @@ public class DoctorService extends UserService {
 
     }
 
-
-    //DoctorAvailabilityDto getDoctorAvailability(Long doctorId);
 }

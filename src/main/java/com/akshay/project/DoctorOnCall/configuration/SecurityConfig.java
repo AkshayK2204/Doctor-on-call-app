@@ -66,11 +66,11 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(){
         return customUserDetailsService;
     }
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

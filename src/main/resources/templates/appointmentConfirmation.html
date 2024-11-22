@@ -1,20 +1,87 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <title>Appointment Confirmation</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Appointment Confirmation</h2>-->
+<!--<p>Thank you, your appointment has been booked successfully!</p>-->
+<!--<p>Appointment ID: <span th:text="${appointment.appId}"></span></p>-->
+<!--<p>Patient ID: <span th:text="${patient_id}"></span></p>-->
+<!--<p>Doctor ID: <span th:text="${doctor_id}"></span></p>-->
+<!--<p>Date: <span th:text="${appointment.date}"></span></p>-->
+<!--<p>Time: <span th:text="${appointment.startTime}"></span> - <span th:text="${appointment.endTime}"></span></p>-->
+<!--&lt;!&ndash; Add more fields as necessary &ndash;&gt;-->
+
+<!--<a th:href="@{/user/{patient_id}/appointments/view(patient_id=${patient_id})}" class="btn btn-primary">-->
+<!--  Back to appointments-->
+<!--</a>-->
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <meta charset="UTF-8">
   <title>Appointment Confirmation</title>
+  <style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        margin: 2rem auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: rgb(92, 111, 239);
+        color: white;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: rgb(92, 111, 239);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: rgb(72, 91, 219);
+    }
+  </style>
 </head>
 <body>
-<h2>Appointment Confirmation</h2>
-<p>Thank you, your appointment has been booked successfully!</p>
-<p>Appointment ID: <span th:text="${appointment.appId}"></span></p>
-<p>Patient ID: <span th:text="${patient_id}"></span></p>
-<p>Doctor ID: <span th:text="${doctor_id}"></span></p>
-<p>Date: <span th:text="${appointment.date}"></span></p>
-<p>Time: <span th:text="${appointment.startTime}"></span> - <span th:text="${appointment.endTime}"></span></p>
-<!-- Add more fields as necessary -->
-
-<a th:href="@{/user/{patient_id}/appointments/view(patient_id=${patient_id})}" class="btn btn-primary">
-  Back to appointments
-</a>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header text-center">
+      <h2>Appointment Confirmation</h2>
+    </div>
+    <div class="card-body">
+      <p class="text-success text-center fw-bold">Thank you, your appointment has been booked successfully!</p>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <p>Appointment ID: <strong><span th:text="${appointment.appId}"></span></strong></p>
+          <p>Patient: <strong><span th:text="${appointment.patient.name}"></span></strong></p>
+          <p>Doctor: <strong><span th:text="${appointment.doctor.name}"></span></strong></p>
+        </div>
+        <div class="col-md-6">
+          <p>Date: <strong><span th:text="${appointment.date}"></span></strong></p>
+          <p>Time: <strong><span th:text="${appointment.startTime}"></span></strong> - <strong><span th:text="${appointment.endTime}"></span></strong></p>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a th:href="@{/user/{patient_id}/appointments/view(patient_id=${patient_id})}" class="btn btn-primary">
+          <i class="fa fa-arrow-left"></i> Back to Appointments
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

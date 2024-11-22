@@ -54,6 +54,10 @@
 </nav>
 
 <main>
+
+    <div class="container mt-5">
+        <p th:text="${cancellationMessage}"></p>
+    </div>
     <div class="container mt-5">
         <h2>Your Appointments</h2>
         <div class="table-responsive">
@@ -61,7 +65,8 @@
                 <thead class="table-header">
                 <tr>
                     <th>Appointment ID</th>
-                    <th>Appointment Date</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Status</th>
@@ -71,15 +76,18 @@
                 <tbody>
                 <tr th:each="appointment : ${appList}">
                     <td th:text="${appointment.appId}"></td>
+                    <td th:text="${appointment.doctor.name}"></td>
                     <td th:text="${appointment.date}"></td>
                     <td th:text="${appointment.startTime}"></td>
                     <td th:text="${appointment.endTime}"></td>
                     <td th:text="${appointment.status}"></td>
                     <td>
                         <a th:href="@{/user/{patient_id}/appointments/{app_id}/edit(patient_id=${patient_id}, app_id=${appointment.appId})}"
-                           class="btn btn-danger">Edit Appointment</a>
+                           class="btn btn-danger">Edit</a>
                         <a th:href="@{/user/{patient_id}/appointments/{app_id}/cancel(patient_id=${patient_id}, app_id=${appointment.appId})}"
-                           class="btn btn-danger">Cancel Appointment</a>
+                           class="btn btn-danger">Cancel</a>
+                        <a th:href="@{/user/{patient_id}/appointments/{app_id}/video-call(patient_id=${patient_id}, app_id=${appointment.appId})}"
+                           class="btn btn-danger">Video Call</a>
                     </td>
                 </tr>
 

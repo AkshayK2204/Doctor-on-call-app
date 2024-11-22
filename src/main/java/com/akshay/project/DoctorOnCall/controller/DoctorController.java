@@ -53,8 +53,10 @@ public class DoctorController {
     }
 
 
-
-
+    @GetMapping("doctor/{doctor_id}/appointments/{app_id}/video-call")
+    public String showDoctorVideoCall(@PathVariable Long app_id, Model model) {
+        return "videoCall";
+    }
 
 
     @Operation(summary = "Displays available time slots for a specific doctor")
@@ -67,8 +69,6 @@ public class DoctorController {
         }
         System.out.println(availabilityList);
         model.addAttribute("availabilityList",availabilityList);
-//        Map<LocalDate, List<LocalTime>> openAppointmentMap = doctor.getAvailabilityMap();
-//        model.addAttribute("openAppointmentMap",openAppointmentMap);
         return "openTimesList";
     }
 
@@ -87,28 +87,9 @@ public class DoctorController {
         Doctor doctor = doctorService.findById(doctor_id);
         model.addAttribute("doctorName",doctor.getName());
 
-
         Availability availability = appointmentService.getOpenAppointments(openTimesDTO,doctor);
         model.addAttribute("availability",availability);
-//        if(openAppointmentMap.isEmpty()) {
-//            model.addAttribute("NoAppointmentFound", "No open appointments available for the given times.");
-////            return String.format("redirect:/doctor/%d/dashboard", doctor_id);
-//            return "openTimesConfirmation";
-//        }
-//        appointmentService.saveAll(openAppointmentList);
-//        doctorService.saveAvailabilityMap(openAppointmentMap);
 
-//        Map<LocalDate,List<LocalTime>> openAppointmentsMap = new HashMap<>();
-//        for (Appointment appointment : openAppointmentList) {
-//            LocalDate date = appointment.getDate();
-//            LocalTime time = appointment.getStartTime();
-//            openAppointmentsMap.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
-//        }
-
-
-//        model.addAttribute("openAppointmentMap",openAppointmentMap);
-
-//        return "openTimesConfirmation";
         return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
     }
 

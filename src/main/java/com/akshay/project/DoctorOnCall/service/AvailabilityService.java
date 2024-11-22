@@ -1,7 +1,12 @@
 package com.akshay.project.DoctorOnCall.service;
 
+import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.repository.AvailabilityRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
 
 @Service
 public class AvailabilityService {
@@ -12,22 +17,22 @@ public class AvailabilityService {
         this.availabilityRepository = availabilityRepository;
     }
 
-//    public void validateOpenTime(LocalDate date, LocalTime startTime) {
-//        Optional<Availability> optionalAvailability = availabilityRepository.findByDate(date);
-//        if(optionalAvailability.isEmpty()){
-//            throw new IllegalArgumentException("No availability found for the given date.");
-//        }
-//        else{
-//            Availability availability = optionalAvailability.get();
-//            if(!availability.getOpenTimes().contains(startTime)){
-//                throw new IllegalArgumentException("Time slot not available for booking.");
-//            }
-//            else{
-//                availability.getOpenTimes().remove(startTime);
-//                availabilityRepository.save(availability);
-//            }
-//        }
-//    }
+    public void validateOpenTime(LocalDate date, LocalTime startTime) {
+        Optional<Availability> optionalAvailability = availabilityRepository.findByDate(date);
+        if(optionalAvailability.isEmpty()){
+            throw new IllegalArgumentException("No availability found for the given date.");
+        }
+        else{
+            Availability availability = optionalAvailability.get();
+            if(!availability.getOpenTimes().contains(startTime)){
+                throw new IllegalArgumentException("Time slot not available for booking.");
+            }
+            else{
+                availability.getOpenTimes().remove(startTime);
+                availabilityRepository.save(availability);
+            }
+        }
+    }
 
 
 }

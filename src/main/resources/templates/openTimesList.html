@@ -1,24 +1,112 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <meta charset="UTF-8">
   <title>Available Slots</title>
+  <style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        width: 60%; /* Reduced the card width */
+        margin: 2rem auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: rgb(92, 111, 239);
+        color: white;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: rgb(92, 111, 239);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: rgb(72, 91, 219);
+    }
+
+    ul {
+        padding-left: 0; /* Remove default padding for centering */
+        list-style-type: none; /* Remove bullets */
+    }
+
+    ul li {
+        margin-bottom: 5px;
+        text-align: center; /* Center the text in the list items */
+    }
+
+    .text-center h5, .text-center span {
+        display: block; /* Ensure everything is aligned in center */
+    }
+  </style>
 </head>
 <body>
-<h2>Available Time Slots for Doctor</h2>
-
-<div th:each="availability : ${availabilityList}">
-  <p><strong>Date:</strong> <span th:text="${availability.date}"></span></p>
-  <ul>
-    <li th:each="time : ${availability.openTimes}">
-      <span th:text="${time}"></span>
-    </li>
-  </ul>
-</div>
-<div>
-  <a th:href="@{/doctor/{doctor_id}/dashboard(doctor_id=${doctor_id})}" class="btn btn-primary">Back to Dashboard</a>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header text-center">
+      <h2>Available Time Slots</h2>
+    </div>
+    <div class="card-body">
+      <p class="text-center">Below are the available time slots for the selected doctor:</p>
+      <hr>
+      <div th:each="availability : ${availabilityList}" class="mb-4 text-center">
+        <h5><i class="fa fa-calendar"></i> <strong>Date:</strong> <span th:text="${availability.date}"></span></h5>
+        <ul class="list-group mx-auto" style="width: 50%;"> <!-- Centered and reduced width -->
+          <li class="list-group-item" th:each="time : ${availability.openTimes}">
+            <i class="fa fa-clock-o"></i> <span th:text="${time}"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="text-center mt-4">
+        <a th:href="@{/doctor/{doctor_id}/dashboard(doctor_id=${doctor_id})}" class="btn btn-primary">
+          <i class="fa fa-arrow-left"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <title>Available Slots</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Available Time Slots for Doctor</h2>-->
+
+<!--<div th:each="availability : ${availabilityList}">-->
+<!--  <p><strong>Date:</strong> <span th:text="${availability.date}"></span></p>-->
+<!--  <ul>-->
+<!--    <li th:each="time : ${availability.openTimes}">-->
+<!--      <span th:text="${time}"></span>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</div>-->
+<!--<div>-->
+<!--  <a th:href="@{/doctor/{doctor_id}/dashboard(doctor_id=${doctor_id})}" class="btn btn-primary">Back to Dashboard</a>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+
 
 
 <!--<!DOCTYPE html>-->

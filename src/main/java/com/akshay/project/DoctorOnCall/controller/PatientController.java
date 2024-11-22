@@ -86,7 +86,7 @@ public class PatientController {
         Patient patient = patientService.findById(patient_id);
         long app_id = appointmentService.bookAppointment(appReqDTO,doctor,patient);
         model.addAttribute("app_id",app_id);
-        //doctorService.updateAvailability(appointmentService.getAppointmentById(app_id));
+        doctorService.updateAvailability(appointmentService.getAppointmentById(app_id));
         System.out.println("Appointment created  with app Id : " + app_id);
         return String.format("redirect:/user/%d/doctors/%d/appointment/book/%d", patient_id,doctor_id, app_id);
     }
@@ -123,7 +123,6 @@ public class PatientController {
         appUpdateDTO.setAddress(appointment.getAddress());
         appUpdateDTO.setBloodType(appointment.getBloodType());
         appUpdateDTO.setStartTime(appointment.getStartTime());
-        appUpdateDTO.setEndTime(appointment.getEndTime());
         appUpdateDTO.setDate(appointment.getDate());
         model.addAttribute("appUpdateDTO", appUpdateDTO);
         return "appUpdateForm";
@@ -133,7 +132,7 @@ public class PatientController {
     @Operation(summary = "Updates an existing appointment")
     @PostMapping("/user/{patient_id}/appointments/{app_id}/edit")
     public String updateAppointment(@PathVariable Long app_id,@PathVariable Long patient_id,@Valid @ModelAttribute("appUpdateDTO") AppReqDTO appUpdateDTO ,Model model){
-//        availabilityService.validateOpenTime(appUpdateDTO.getDate(),appUpdateDTO.getStartTime());
+        availabilityService.validateOpenTime(appUpdateDTO.getDate(),appUpdateDTO.getStartTime());
         Appointment updatedAppointment =appointmentService.updateAppointment(app_id,appUpdateDTO);
         model.addAttribute("updatedAppointment", updatedAppointment);
         model.addAttribute("patient_id",patient_id);
@@ -146,10 +145,10 @@ public class PatientController {
         boolean isCancelled = appointmentService.cancelAppointment(app_id);
         doctorService.updateAvailability(appointmentService.getAppointmentById(app_id));
         if(isCancelled){
-            model.addAttribute("message", "The appointment has been cancelled...");
+            model.addAttribute("cancellationMessage", "The appointment has been cancelled...");
         }
         else{
-            model.addAttribute("message", "Cancellation failed...");
+            model.addAttribute("cancellationMessage", "Cannot cancel appointment because it is already completed or cancelled ...");
         }
         return String.format("redirect:/user/%d/appointments/view",patient_id);
     }
@@ -162,6 +161,11 @@ public class PatientController {
         List<Availability> availabilityList = doctor.getAvailabilityList();
         model.addAttribute("availabilityList",availabilityList);
         return "openTimesList";
+    }
+
+    @GetMapping("user/{patient_id}/appointments/{app_id}/video-call")
+    public String showPatientVideoCall(@PathVariable Long app_id, Model model) {
+        return "videoCall";
     }
 }
 

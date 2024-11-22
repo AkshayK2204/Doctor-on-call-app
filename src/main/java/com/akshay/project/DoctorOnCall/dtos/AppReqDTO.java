@@ -24,6 +24,7 @@ public class AppReqDTO {
 
     private BLOOD_TYPE bloodType;
 
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")

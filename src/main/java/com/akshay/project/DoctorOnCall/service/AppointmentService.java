@@ -104,9 +104,6 @@ public class AppointmentService {
         }
     }
 
-//    public Map<LocalDate,List<LocalTime>> findOpenAppointmentMapByDoctor(Doctor doctor) {
-//        return doctor.getAvailabilityMap();
-//    }
 
     public List<Appointment> findBookedAppointmentByDoctor(Doctor doctor) {
         return appointmentRepository.findByDoctor(doctor)
@@ -117,7 +114,8 @@ public class AppointmentService {
     }
 
     public int countAllAppointment(List<Appointment> doctorAppointments){
-        return doctorAppointments.stream().filter(appointment -> appointment.getStatus()!=APP_STATUS.OPEN).toList().size();
+//        return doctorAppointments.stream().filter(appointment -> appointment.getStatus()!=APP_STATUS.OPEN).toList().size();
+        return doctorAppointments.size();
     }
 
     public int countCompletedAppointment(List<Appointment> doctorAppointments){
@@ -137,7 +135,7 @@ public class AppointmentService {
         appointment.setAddress(appUpdateDTO.getAddress());
         appointment.setBloodType(appUpdateDTO.getBloodType());
         appointment.setStartTime(appUpdateDTO.getStartTime());
-        appointment.setEndTime(appUpdateDTO.getEndTime());
+        appointment.setEndTime(appUpdateDTO.getStartTime().plusMinutes(30));
         appointment.setDate(appUpdateDTO.getDate());
         appointment.setStatus(APP_STATUS.SCHEDULED);
         appointmentRepository.save(appointment);
@@ -160,24 +158,10 @@ public class AppointmentService {
     @Transactional
     public Availability getOpenAppointments(OpenTimesDTO openTimesDTO, Doctor doctor) {
 
-//        HashMap<LocalDate, List<LocalTime>> availabilityMap = Optional.ofNullable(doctor.getAvailabilityMap()).orElse(new HashMap<>());
-
-//        List<Appointment> openAppointments = new ArrayList<>();
         LocalDate date = openTimesDTO.getDate();
         LocalTime start = openTimesDTO.getStartTime();
         LocalTime end = openTimesDTO.getEndTime();
 
-
-//        while (!start.isAfter(end.minusMinutes(30))) {
-//            Appointment appointment = new Appointment();
-//            appointment.setDoctor(doctor);
-//            appointment.setStartTime(start);
-//            appointment.setEndTime(start.plusMinutes(30));
-//            appointment.setDate(day);
-//            appointment.setStatus(APP_STATUS.OPEN);
-//            openAppointments.add(appointment);
-//            start = start.plusMinutes(30);
-//        }
         List<LocalTime> openTimesList = new ArrayList<>();
         while (!start.isAfter(end.minusMinutes(30))) {
             openTimesList.add(start);
@@ -195,9 +179,6 @@ public class AppointmentService {
         return availability;
     }
 
-    public void saveAll(List<Appointment> openAppointmentList) {
-        appointmentRepository.saveAll(openAppointmentList);
-    }
 
 
 }

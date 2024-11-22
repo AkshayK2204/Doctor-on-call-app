@@ -89,12 +89,26 @@
     console.log("Selected Time:", selectedTime);
     console.log("Matching Availability:", matchingAvailability);
 
+    const today = new Date();
+    const selectedDateObj = new Date(selectedDate);
+
+    if (selectedDateObj < today) {
+      alert('Selected date is in the past.');
+      return false;
+    }
+
     if (!matchingAvailability) {
       alert('No availability on the selected date.');
       return false;
     }
 
-    const timeMatch = matchingAvailability.openTimes.some(time => time === selectedTime);
+    const timeMatch = matchingAvailability.openTimes.some(time => {
+      const timeWithoutSeconds = time.split(":").slice(0, 2).join(":");
+      return timeWithoutSeconds === selectedTime;
+    });
+
+    console.log("Time Match:", timeMatch);
+
 
     if (!timeMatch) {
       alert('Selected time is not available.');

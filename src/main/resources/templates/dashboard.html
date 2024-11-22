@@ -56,7 +56,7 @@
 <body>
 <nav class="navbar navbar-expand-sm navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="/doctor/{doctor_id}/"><i class="fa fa-files-o" aria-hidden="true" style="color: white;"></i>
+        <a class="navbar-brand" th:href="@{/doctor/{doctor_id}/dashboard(doctor_id=${doctor_id})}"><i class="fa fa-files-o" aria-hidden="true" style="color: white;"></i>
             Appointment System</a>
         <div class="ml-auto">
             <a th:href="@{/customLogin}" class="btn" type="button" id="dashboard_link"><i class="fa fa-sign-out" aria-hidden="true"></i> logout</a>&nbsp;&nbsp;
@@ -131,6 +131,10 @@
                     <td th:text="${appointment.startTime}"></td>
                     <td th:text="${appointment.endTime}"></td>
                     <td th:text="${appointment.status}"></td>
+                    <td>
+                        <a th:href="@{/doctor/{doctor_id}/appointments/{app_id}/video-call(doctor_id=${doctor_id}, app_id=${appointment.appId})}"
+                           class="btn btn-danger">Video Call</a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(doctorAppList)}">
                     <td colspan="10" class="text-center text-danger"><h6>No Appointments Available</h6></td>
@@ -144,12 +148,13 @@
             <a th:href="@{/doctor/{doctor_id}/open-times(doctor_id=${doctor_id})}" class="btn btn-primary">
                 Add open times
             </a>
-        </div>
-        <div>
+<!--        </div>-->
+<!--        <div>-->
             <a th:href="@{/doctor/{doctor_id}/open-times/view(doctor_id=${doctor_id})}" class="btn btn-primary">
                 View open times
             </a>
         </div>
+    </div>
 </main>
 
 </body>
