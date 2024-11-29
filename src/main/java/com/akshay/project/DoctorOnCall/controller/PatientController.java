@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +43,8 @@ public class PatientController {
     public String getPatientHome(@PathVariable Long patient_id, HttpSession session, Model model) {
         System.out.println("Session ID: " + session.getId());
         System.out.println("Session Timeout: " + session.getMaxInactiveInterval());
+        String patientName = patientService.findById(patient_id).getName();
+        model.addAttribute("patientName",patientName);
         return "patientHome";
     }
 
@@ -163,8 +162,25 @@ public class PatientController {
         return "openTimesList";
     }
 
+//    @GetMapping("user/{patient_id}/appointments/{app_id}/video-call")
+//    public String showPatientVideoCall(@PathVariable Long app_id, Model model) {
+//        return "videoCall";
+//    }
+
     @GetMapping("user/{patient_id}/appointments/{app_id}/video-call")
-    public String showPatientVideoCall(@PathVariable Long app_id, Model model) {
+    public String showPatientVideoCall(
+            @RequestParam Long appId,
+            @RequestParam String accessKey,
+            @RequestParam Long userId,
+            @PathVariable Long app_id,
+            @PathVariable Long patient_id,
+            Model model) {
+
+
+        model.addAttribute("appId", appId);
+        model.addAttribute("accessKey", accessKey);
+        model.addAttribute("userId", userId);
+
         return "videoCall";
     }
 }

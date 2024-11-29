@@ -14,7 +14,6 @@ import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -71,6 +70,11 @@ public class AppointmentService {
         appointment.setEndTime(appReqDTO.getStartTime().plusMinutes(30));
         appointment.setDate(appReqDTO.getDate());
         appointment.setStatus(APP_STATUS.SCHEDULED);
+
+        String accessKey = String.format("%04d", new Random().nextInt(10000));
+
+        System.out.println(accessKey);
+        appointment.setAccessKey(accessKey);
         return appointment;
     }
 
@@ -168,6 +172,9 @@ public class AppointmentService {
             start = start.plusMinutes(30);
         }
 
+        if(availabilityRepository.existsByDateAndDoctor(date,doctor)){
+            availabilityRepository.deleteByDateAndDoctor(date,doctor);
+        }
 
         Availability availability = new Availability();
         if (!openTimesList.isEmpty()) {

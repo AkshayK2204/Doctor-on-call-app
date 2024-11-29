@@ -86,7 +86,7 @@
                            class="btn btn-danger">Edit</a>
                         <a th:href="@{/user/{patient_id}/appointments/{app_id}/cancel(patient_id=${patient_id}, app_id=${appointment.appId})}"
                            class="btn btn-danger">Cancel</a>
-                        <a th:href="@{/user/{patient_id}/appointments/{app_id}/video-call(patient_id=${patient_id}, app_id=${appointment.appId})}"
+                        <a th:href="@{/user/{patient_id}/appointments/{app_id}/video-call(patient_id=${patient_id},app_id=${appointment.appId}, appId=${appointment.appId}, accessKey=${appointment.accessKey}, userId=${patient_id})}"
                            class="btn btn-danger">Video Call</a>
                     </td>
                 </tr>

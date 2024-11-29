@@ -64,7 +64,7 @@
 
 <main>
     <div class="container welcome-section">
-        <h2 class="text-center">Welcome, <span th:text="${patientName}"></span></h2>
+        <h2>Welcome, <span th:text="${patientName}"></span></h2>
         <p class="lead">Welcome to your dashboard. You can manage your appointments, view available doctors, and more.</p>
         <div class="row justify-content-center">
             <div text-center class="col-md-4">

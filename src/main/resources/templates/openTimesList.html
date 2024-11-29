@@ -12,7 +12,7 @@
     }
 
     .card {
-        width: 60%; /* Reduced the card width */
+        width: 60%;
         margin: 2rem auto;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -34,17 +34,17 @@
     }
 
     ul {
-        padding-left: 0; /* Remove default padding for centering */
-        list-style-type: none; /* Remove bullets */
+        padding-left: 0;
+        list-style-type: none;
     }
 
     ul li {
         margin-bottom: 5px;
-        text-align: center; /* Center the text in the list items */
+        text-align: center;
     }
 
     .text-center h5, .text-center span {
-        display: block; /* Ensure everything is aligned in center */
+        display: block;
     }
   </style>
 </head>
@@ -58,10 +58,10 @@
       <p class="text-center">Below are the available time slots for the selected doctor:</p>
       <hr>
       <div th:each="availability : ${availabilityList}" class="mb-4 text-center">
-        <h5><i class="fa fa-calendar"></i> <strong>Date:</strong> <span th:text="${availability.date}"></span></h5>
-        <ul class="list-group mx-auto" style="width: 50%;"> <!-- Centered and reduced width -->
+        <h5><i class="fa fa-calendar"></i> <strong>Date:</strong> <span th:text="${availability.date}"></span> <span style="color: red;"><a th:href="@{/doctor/{doctor_id}/open-times/delete/{availability_id}(doctor_id=${doctor_id}, availability_id=${availability.id})}">Delete</a></span></h5>
+        <ul class="list-group mx-auto" style="width: 50%;">
           <li class="list-group-item" th:each="time : ${availability.openTimes}">
-            <i class="fa fa-clock-o"></i> <span th:text="${time}"></span>
+            <i class="fa fa-clock-o"></i> <span th:text="${time}"></span> <span style="color: red;"><a th:href="@{/doctor/{doctor_id}/open-times/delete/{availability_id}/{time}(doctor_id=${doctor_id}, availability_id=${availability.id}, time=${time})}">Delete</a></span>
           </li>
         </ul>
       </div>

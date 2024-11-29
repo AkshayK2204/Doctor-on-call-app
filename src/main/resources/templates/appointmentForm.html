@@ -89,11 +89,11 @@
     console.log("Selected Time:", selectedTime);
     console.log("Matching Availability:", matchingAvailability);
 
-    const today = new Date();
-    const selectedDateObj = new Date(selectedDate);
+    const now = new Date();
+    const selectedDateTime = new Date(`${selectedDate}T${selectedTime}`);
 
-    if (selectedDateObj < today) {
-      alert('Selected date is in the past.');
+    if (selectedDateTime < now) {
+      alert('Please select a date and time in the future');
       return false;
     }
 

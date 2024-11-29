@@ -9,13 +9,12 @@ import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -93,4 +92,31 @@ public class DoctorController {
         return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
     }
 
+    @GetMapping("/doctor/{doctor_id}/open-times/delete/{availability_id}")
+    public String deleteAvailability(@PathVariable Long doctor_id,@PathVariable Long availability_id,Model model){
+        doctorService.deleteAvailability(availability_id);
+        return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
+    }
+
+    @GetMapping("/doctor/{doctor_id}/open-times/delete/{availability_id}/{time}")
+    public String deleteOpenTime(@PathVariable Long doctor_id, @PathVariable Long availability_id, @PathVariable LocalTime time, Model model){
+        doctorService.deleteOpenTime(availability_id,time);
+        return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
+    }
+
+    @GetMapping("/appointments/{appId}/validate")
+    public ResponseEntity<Boolean> validateAccessKey(
+            @PathVariable Long appId,
+            @RequestParam String accessKey,
+            @RequestParam Long userId) {
+
+        Appointment appointment = appointmentService.getAppointmentById(appId);
+
+        if (appointment.getAccessKey().equals(accessKey) &&
+                (appointment.getDoctor().getId().equals(userId) || appointment.getPatient().getId().equals(userId))) {
+            return ResponseEntity.ok(true);
+        }
+
+        return ResponseEntity.ok(false);
+    }
 }

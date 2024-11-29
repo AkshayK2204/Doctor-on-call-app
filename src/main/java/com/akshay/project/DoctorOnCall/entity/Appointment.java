@@ -37,6 +37,9 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private BLOOD_TYPE bloodType;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate date;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
 
@@ -46,9 +49,7 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private APP_STATUS status;
 
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String accessKey;
 
     public Appointment(Doctor doctor, Patient patient, String name, long age, String phoneNumber, String address, BLOOD_TYPE bloodType, LocalDate date, LocalTime startTime, LocalTime endTime, APP_STATUS status) {
         this.doctor= doctor;
@@ -62,5 +63,6 @@ public class Appointment {
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
+
     }
 }

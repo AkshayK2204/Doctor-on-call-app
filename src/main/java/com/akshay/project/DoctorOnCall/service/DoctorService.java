@@ -5,6 +5,7 @@ import com.akshay.project.DoctorOnCall.entity.Appointment;
 import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
+import com.akshay.project.DoctorOnCall.repository.AvailabilityRepository;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import jakarta.transaction.Transactional;
@@ -19,11 +20,16 @@ import java.util.stream.Collectors;
 @Service
 public class DoctorService extends UserService {
 
+    private final AvailabilityRepository availabilityRepository;
+
     public DoctorService(BCryptPasswordEncoder bCryptPasswordEncoder,
                          DoctorRepository doctorRepository,
-                         PatientRepository patientRepository
+                         PatientRepository patientRepository,
+                         AvailabilityRepository availabilityRepository
+
     ){
         super(bCryptPasswordEncoder,doctorRepository,patientRepository);
+        this.availabilityRepository = availabilityRepository;
     }
 
     @Override
@@ -90,4 +96,23 @@ public class DoctorService extends UserService {
 
     }
 
+    public void deleteAvailability(Long availabilityId) {
+        Optional<Availability> optionalAvailability = availabilityRepository.findById(availabilityId);
+        if (optionalAvailability.isPresent()) {
+            availabilityRepository.delete(optionalAvailability.get());
+        }
+    }
+
+    public void deleteOpenTime(Long availabilityId, LocalTime time) {
+        Optional<Availability> optionalAvailability = availabilityRepository.findById(availabilityId);
+        if (optionalAvailability.isPresent()) {
+            Availability availability = optionalAvailability.get();
+            List<LocalTime> openTimes = availability.getOpenTimes();
+            if (!openTimes.remove(time)) {
+                throw new IllegalArgumentException("Time slot not available for removal");
+            }
+            availability.setOpenTimes(openTimes);
+            availabilityRepository.save(availability);
+        }
+    }
 }
