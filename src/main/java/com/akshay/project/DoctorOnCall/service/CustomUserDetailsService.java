@@ -4,7 +4,7 @@ import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.entity.Patient;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,12 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private PatientRepository patientRepository;
-    @Autowired
-    private DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

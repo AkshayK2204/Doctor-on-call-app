@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient,Long> {
 
-    //@Query("SELECT u FROM Patient p WHERE p.email = ?1")
     Optional<Patient> findByEmail(String email);
 }

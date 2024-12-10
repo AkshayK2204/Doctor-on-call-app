@@ -65,7 +65,7 @@
 <main>
     <div class="container welcome-section">
         <h2 class="text-center">Welcome, <span th:text="${patientName}"></span></h2>
-        <p class="lead">Welcome to your dashboard. You can manage your appointments, view available doctors, and more.</p>
+        <p class="text-center lead">Welcome to your dashboard. You can manage your appointments, view available doctors, and more.</p>
         <div class="row justify-content-center">
             <div text-center class="col-md-4">
                 <a th:href="@{/user/{patient_id}/doctors(patient_id=${patient_id})}" class="btn btn-primary btn-action">

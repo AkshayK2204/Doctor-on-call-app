@@ -28,4 +28,5 @@ public class RegisterDTO {
 
     @NotNull(message = "Role is required")
     private ROLE reg_role;
+
 }

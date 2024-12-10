@@ -11,14 +11,17 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/index}">Registration and Login System</a>
+        <a class="navbar-brand" th:href="@{/index}">Doctor on Call</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/customLogin}">Login</a>
                 </li>
             </ul>
         </div>
@@ -42,40 +45,39 @@
             <div class="card-body">
                 <form th:action="@{/register}" th:method="post" th:object="${user}">
 
-                <!-- Name -->
+
                     <div class="form-group mb-3">
                         <label for="name" class="form-label">Name:</label>
                         <input type="text" id="name" class="form-control" th:field="*{reg_name}" placeholder="Enter your name" required />
                         <p th:errors="*{reg_name}" class="text-danger" th:if="${#fields.hasErrors('reg_name')}"></p>
                     </div>
 
-                    <!-- Email -->
+
                     <div class="form-group mb-3">
                         <label for="email" class="form-label">Email:</label>
                         <input type="email" id="email" class="form-control" th:field="*{reg_email}" placeholder="Enter your email" required />
                         <p th:errors="*{reg_email}" class="text-danger" th:if="${#fields.hasErrors('reg_email')}"></p>
                     </div>
 
-                    <!-- Password -->
+
                     <div class="form-group mb-3">
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" id="password" class="form-control" th:field="*{reg_password}" placeholder="Enter your password" required />
                         <p th:errors="*{reg_password}" class="text-danger" th:if="${#fields.hasErrors('reg_password')}"></p>
                     </div>
 
-                    <!-- Role -->
+
                     <div class="form-group mb-3">
                         <label for="role" class="form-label">Role:</label>
                         <select id="role" class="form-control" th:field="*{reg_role}" required>
                             <option value="" disabled selected>Select role</option>
                             <option th:value="ROLE_PATIENT">Patient</option>
                             <option th:value="ROLE_DOCTOR">Doctor</option>
-<!--                            <option th:value="'ADMIN'">Admin</option>-->
                         </select>
                         <p th:errors="*{reg_role}" class="text-danger" th:if="${#fields.hasErrors('reg_role')}"></p>
                     </div>
 
-                    <!-- Submit Button -->
+
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Register</button>
                         <span>Already registered? <a th:href="@{/customLogin}">Login here</a></span>

@@ -36,6 +36,8 @@ public class PatientController {
     @Operation(summary = "Displays patient's dashboard")
     @GetMapping("/user/{patient_id}/dashboard")
     public String getPatientHome(@PathVariable Long patient_id, HttpSession session, Model model) {
+        System.out.println("Session ID: " + session.getId());
+        System.out.println("Session Timeout: " + session.getMaxInactiveInterval());
         String patientName = patientService.findById(patient_id).getName();
         model.addAttribute("patientName",patientName);
         return "patientHome";
@@ -58,8 +60,13 @@ public class PatientController {
         model.addAttribute("appReqDTO",new AppReqDTO());
         Doctor doctor = doctorService.findById(doctor_id);
         List<Availability> availabilityList = doctor.getAvailabilityList();
+        //model.addAttribute("availabilityList",availabilityList);
         model.addAttribute("availabilityList",availabilityList != null ? availabilityList : Collections.emptyList());
         assert availabilityList != null;
+        availabilityList.forEach(a -> {
+            System.out.println("Date: " + a.getDate());
+            System.out.println("Times: " + a.getOpenTimes());
+        });
         model.addAttribute("doctor_id", doctor_id);
         return "appointmentForm";
     }

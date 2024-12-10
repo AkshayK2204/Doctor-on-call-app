@@ -5,18 +5,21 @@ import com.akshay.project.DoctorOnCall.entity.Patient;
 import com.akshay.project.DoctorOnCall.entity.User;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public abstract class UserService {
     protected final BCryptPasswordEncoder bCryptPasswordEncoder;
     protected final DoctorRepository doctorRepository;
     protected final PatientRepository patientRepository;
 
 
+    protected UserService(BCryptPasswordEncoder bCryptPasswordEncoder, DoctorRepository doctorRepository, PatientRepository patientRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.doctorRepository = doctorRepository;
+        this.patientRepository = patientRepository;
+    }
 
     public String encodePassword(User user, String plainPassword) {
         return bCryptPasswordEncoder.encode(plainPassword);

@@ -7,9 +7,10 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Book an Appointment</h2>
-    <!--  <form th:action="@{/user/doctors/{doctorId}/appointment/book/{app_id}(doctorId=${doctor_id},app_id=${app_id})}" method="post">-->
-    <!--  <form th:action="@{/doctors/{doctor_id}/appointment/book(doctor_id=${doctor_id})}" method="post">-->
+    <h2>Edit your appointment</h2>
+    <div th:if="${message}">
+        <div class="alert alert-danger" th:text="${message}"></div>
+    </div>
     <form th:action="@{/user/{patient_id}/appointments/{app_id}/edit(patient_id=${patient_id},app_id=${app_id})}"
           th:object="${appUpdateDTO}" method="post">
 
@@ -47,16 +48,35 @@
             <label for="startTime" class="form-label">Start Time</label>
             <input type="time" class="form-control" id="startTime" th:field="*{startTime}" required>
         </div>
-<!--        <div class="mb-3">-->
-<!--            <label for="endTime" class="form-label">End Time</label>-->
-<!--            <input type="time" class="form-control" id="endTime" th:field="*{endTime}" required>-->
-<!--        </div>-->
         <div class="mb-3">
             <label for="date" class="form-label">Date</label>
             <input type="date" class="form-control" id="date" th:field="*{date}" required>
         </div>
-        <button type="submit" class="btn btn-primary">Book Appointment</button>
+        <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
+
+<div class="container mt-5">
+    <h2>Open Appointments</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Available Times</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="availability : ${availabilityList}">
+            <td th:text="${availability.date != null ? availability.date : 'N/A'}"></td>
+            <td>
+                <ul>
+                    <li th:each="time : ${availability.openTimes}" th:text="${#temporals.format(time, 'HH:mm')}"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

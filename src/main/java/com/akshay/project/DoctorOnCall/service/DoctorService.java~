@@ -1,10 +1,13 @@
 package com.akshay.project.DoctorOnCall.service;
 
 import com.akshay.project.DoctorOnCall.dtos.DoctorDTO;
+import com.akshay.project.DoctorOnCall.dtos.RegisterDTO;
 import com.akshay.project.DoctorOnCall.entity.Appointment;
 import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
+import com.akshay.project.DoctorOnCall.entity.User;
 import com.akshay.project.DoctorOnCall.enums.APP_STATUS;
+import com.akshay.project.DoctorOnCall.enums.ROLE;
 import com.akshay.project.DoctorOnCall.repository.AppointmentRepository;
 import com.akshay.project.DoctorOnCall.repository.AvailabilityRepository;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
@@ -129,5 +132,14 @@ public class DoctorService extends UserService {
         }
     }
 
+    public User createDoctor(RegisterDTO registerDTO) {
+        Doctor doctor = new Doctor();
+        System.out.println("Doctor registering...");
+        doctor.setName(registerDTO.getReg_name());
+        doctor.setEmail(registerDTO.getReg_email());
+        doctor.setPassword(registerDTO.getReg_password());
+        doctor.setRole(ROLE.ROLE_DOCTOR);
+        registerDoctor(doctor);
+    }
 }
 

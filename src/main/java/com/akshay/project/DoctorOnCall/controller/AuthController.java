@@ -13,7 +13,7 @@ import com.akshay.project.DoctorOnCall.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 
 @Controller
+@AllArgsConstructor
 public class AuthController {
 
     private final DoctorService doctorService;
@@ -40,14 +41,8 @@ public class AuthController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    @Autowired
-    public AuthController(DoctorService doctorService, PatientService patientService, UserService userService, CustomUserDetailsService customUserDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.doctorService = doctorService;
-        this.patientService = patientService;
-        this.userService = userService;
-        this.customUserDetailsService = customUserDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+    private static final String REDIRECT_LOGIN_SUCCESS = "redirect:/customLogin?success";
+    private static final String REDIRECT_LOGIN_ERROR = "redirect:/customLogin?error";
 
     @Operation(summary = "Show registration form")
     @GetMapping("/register")
@@ -61,7 +56,7 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute RegisterDTO registerDTO, Model model) {
         model.addAttribute("user", registerDTO);
-        System.out.println("Register method triggered");
+        System.out.println("Register method triggered...");
         try {
             System.out.println("Registering user " + registerDTO.getReg_email());
             if (registerDTO.getReg_role() == ROLE.ROLE_DOCTOR) {
@@ -72,7 +67,8 @@ public class AuthController {
                 doctor.setPassword(registerDTO.getReg_password());
                 doctor.setRole(ROLE.ROLE_DOCTOR);
                 doctorService.registerDoctor(doctor);
-                return "redirect:/customLogin?success";
+                return REDIRECT_LOGIN_SUCCESS;
+
             } else if (registerDTO.getReg_role() == ROLE.ROLE_PATIENT) {
                 Patient patient = new Patient();
                 System.out.println("Patient registering...");
@@ -81,11 +77,10 @@ public class AuthController {
                 patient.setPassword(registerDTO.getReg_password());
                 patient.setRole(ROLE.ROLE_PATIENT);
                 patientService.registerPatient(patient);
-                return "redirect:/customLogin?success";
+                return REDIRECT_LOGIN_SUCCESS;
             }
-            return "redirect:/customLogin?success";
+            return REDIRECT_LOGIN_SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
             return "redirect:/register?error";
         }
     }
@@ -128,37 +123,28 @@ public class AuthController {
             }
             switch (user.getRole()) {
                 case ROLE_DOCTOR:
-                    System.out.println("111111111");
-                    Doctor doctor = (Doctor) user;
-                    Long doctorId = doctor.getId();
-                    return String.format("redirect:/doctor/%d/dashboard", doctorId);
+                    return String.format("redirect:/doctor/%d/dashboard", ((Doctor)user).getId());
                 case ROLE_PATIENT:
-                    System.out.println("222222222");
-                    Patient patient = (Patient) user;
-                    Long patientId = patient.getId();
-                    return String.format("redirect:/user/%d/dashboard", patientId);
-                case ROLE_ADMIN:
-                    System.out.println("3333333333");
-                    return "redirect:/admin/home";
+                    return String.format("redirect:/user/%d/dashboard", ((Patient)user).getId());
                 default:
-                    System.out.println("44444444444");
                     return "redirect:/index";
             }
         } else {
             System.out.println("Login failed for email: " + loginDTO.getLog_email());
             model.addAttribute("error", "Invalid email or password");
-            return "redirect:/customLogin?error";
+            return REDIRECT_LOGIN_ERROR;
         }
     }
 
-        @Operation(summary = "Show the home page")
-        @GetMapping("/index")
-        public String getHomePage () {
-            return "index";
-        }
-
-        @GetMapping("/403")
-        public String get403Error(){
-            return "403";
-        }
+    @Operation(summary = "Show the home page")
+    @GetMapping("/index")
+    public String getHomePage () {
+        return "index";
     }
+
+    @Operation(summary = "Loads the custom 403 error page")
+    @GetMapping("/403")
+    public String get403Error(){
+        return "403";
+    }
+}

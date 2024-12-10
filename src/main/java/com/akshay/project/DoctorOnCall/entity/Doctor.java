@@ -19,7 +19,6 @@ import java.util.List;
 public class Doctor extends User {
 
      SPECIALIZATION specialization;
-//     private HashMap<LocalDate, List<LocalTime>> availabilityMap;
 
      @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
      @JsonManagedReference
@@ -34,12 +33,4 @@ public class Doctor extends User {
         this.specialization = specialization;
     }
 
-    //    public Doctor() {
-//        this.setDocId(getFormattedDoctorId());
-//        this.setRole(ROLE.ROLE_DOCTOR);
-//    }
-
-    public String getFormattedDoctorId() {
-        return "D" + getId();
-    }
 }

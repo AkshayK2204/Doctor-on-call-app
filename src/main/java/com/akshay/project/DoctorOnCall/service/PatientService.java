@@ -37,6 +37,7 @@ import java.util.Optional;
             patient.setPassword(encodePassword(patient, patient.getPassword()));
             patientRepository.save(patient);
         }
+
     }
 
 

@@ -4,7 +4,6 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-<!--    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3301/3301556.png">-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <meta charset="UTF-8">
     <title>Appointment Dashboard</title>
@@ -132,8 +131,6 @@
                     <td th:text="${appointment.endTime}"></td>
                     <td th:text="${appointment.status}"></td>
                     <td>
-<!--                        <a th:href="@{/doctor/{doctor_id}/appointments/{app_id}/video-call(doctor_id=${doctor_id}, app_id=${appointment.appId})}"-->
-<!--                           class="btn btn-danger">Video Call</a>-->
                         <a th:href="@{/doctor/{doctor_id}/appointments/{app_id}/video-call(doctor_id=${doctor_id}, app_id=${appointment.appId}, appId=${appointment.appId}, accessKey=${appointment.accessKey}, userId=${doctor_id})}"
                            class="btn btn-danger">Video Call</a>
 
@@ -151,8 +148,6 @@
             <a th:href="@{/doctor/{doctor_id}/open-times(doctor_id=${doctor_id})}" class="btn btn-primary">
                 Add open times
             </a>
-<!--        </div>-->
-<!--        <div>-->
             <a th:href="@{/doctor/{doctor_id}/open-times/view(doctor_id=${doctor_id})}" class="btn btn-primary">
                 View open times
             </a>

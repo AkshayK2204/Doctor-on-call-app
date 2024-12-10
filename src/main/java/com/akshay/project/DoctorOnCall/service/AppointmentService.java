@@ -12,6 +12,7 @@ import com.akshay.project.DoctorOnCall.repository.AvailabilityRepository;
 import com.akshay.project.DoctorOnCall.repository.DoctorRepository;
 import com.akshay.project.DoctorOnCall.repository.PatientRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class AppointmentService {
 
     @Autowired
@@ -26,15 +28,6 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final AvailabilityRepository availabilityRepository;
-
-    public AppointmentService(AppointmentRepository appointmentRepository,
-                              DoctorRepository doctorRepository,
-                              PatientRepository patientRepository, AvailabilityRepository availabilityRepository) {
-        this.appointmentRepository = appointmentRepository;
-        this.doctorRepository = doctorRepository;
-        this.patientRepository = patientRepository;
-        this.availabilityRepository = availabilityRepository;
-    }
 
     public Appointment getAppointmentById(Long appId) {
         return appointmentRepository.findById(appId)
@@ -118,7 +111,6 @@ public class AppointmentService {
     }
 
     public int countAllAppointment(List<Appointment> doctorAppointments){
-//        return doctorAppointments.stream().filter(appointment -> appointment.getStatus()!=APP_STATUS.OPEN).toList().size();
         return doctorAppointments.size();
     }
 
@@ -133,6 +125,18 @@ public class AppointmentService {
     @Transactional
     public Appointment updateAppointment(Long appId,AppReqDTO appUpdateDTO) {
         Appointment appointment = appointmentRepository.findByAppId(appId);
+
+        if(appointment.getStatus()==APP_STATUS.CANCELLED || appointment.getStatus()==APP_STATUS.COMPLETED ){
+            return null;
+        }
+        availabilityRepository.findByDoctorAndDate(appointment.getDoctor(), appointment.getDate()).ifPresent(availability ->{
+            List<LocalTime> openTimes = availability.getOpenTimes();
+            openTimes.add(appointment.getStartTime());
+            openTimes.remove(appUpdateDTO.getStartTime());
+            availability.setOpenTimes(openTimes);
+            availabilityRepository.save(availability);
+        });
+
         appointment.setName(appUpdateDTO.getName());
         appointment.setAge(appUpdateDTO.getAge());
         appointment.setPhoneNumber(appUpdateDTO.getPhoneNumber());
@@ -143,6 +147,7 @@ public class AppointmentService {
         appointment.setDate(appUpdateDTO.getDate());
         appointment.setStatus(APP_STATUS.SCHEDULED);
         appointmentRepository.save(appointment);
+
         return appointmentRepository.findByAppId(appId);
 
     }
@@ -174,8 +179,8 @@ public class AppointmentService {
 
         if(availabilityRepository.existsByDateAndDoctor(date,doctor)){
             availabilityRepository.deleteByDateAndDoctor(date,doctor);
-        }
 
+        }
         Availability availability = new Availability();
         if (!openTimesList.isEmpty()) {
             availability.setDoctor(doctor);
@@ -186,6 +191,7 @@ public class AppointmentService {
         return availability;
     }
 
-
-
+    public Appointment findAppById(Long appId) {
+        return appointmentRepository.findByAppId(appId);
+    }
 }

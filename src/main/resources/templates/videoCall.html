@@ -17,7 +17,7 @@
       }
 
       try {
-        // Validate user access
+
         const response = await fetch(`/appointments/${appointmentId}/validate?accessKey=${accessKey}&userId=${userId}`);
         if (!response.ok) {
           throw new Error("Failed to validate access. Please try again.");
@@ -31,7 +31,7 @@
 
         const roomName = `vpaas-magic-cookie-d0df63a1bb7f42c4b0786b41d066cd6c/APP-${appointmentId}`;
 
-        // Initialize Jitsi Meet API
+
         const api = new JitsiMeetExternalAPI("8x8.vc", {
           roomName: roomName,
           parentNode: document.querySelector('#jaas-container'),

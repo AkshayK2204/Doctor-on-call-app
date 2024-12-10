@@ -16,4 +16,9 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
     void deleteByDateAndDoctor(LocalDate date, Doctor doctor);
 
     boolean existsByDateAndDoctor(LocalDate date, Doctor doctor);
+
+    Optional<Availability> findByDoctorAndDate(Doctor doctor, LocalDate date);
+
+    Optional<Availability> findByDoctor(Doctor doctor);
+
 }

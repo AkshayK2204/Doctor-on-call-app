@@ -10,11 +10,21 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="header">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Doctor on Call System</a>
+        <a class="navbar-brand" th:href="@{/index}">Doctor on Call</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/customLogin}">Login</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -39,9 +49,9 @@
                     <h3 class="text-center">Login Form</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Login Form -->
+
                     <form method="post" th:action="@{/customLogin}" class="form-horizontal" role="form" th:object="${loginDTO}">
-                        <!-- Email input -->
+
                         <div class="mb-3">
                             <label for="log_email" class="control-label">Email *</label>
                             <input type="email" id="log_email" th:field="*{log_email}" class="form-control"
@@ -50,7 +60,7 @@
                                  th:errors="*{log_email}"></div>
                         </div>
 
-                        <!-- Password input -->
+
                         <div class="mb-3">
                             <label for="log_password" class="control-label">Password *</label>
                             <input type="password" id="log_password" th:field="*{log_password}" class="form-control"
@@ -59,18 +69,6 @@
                                  th:errors="*{log_password}"></div>
                         </div>
 
-                        <!-- Remember me checkbox -->
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="remember" name="remember" />
-                            <label class="form-check-label" for="remember">Remember me</label>
-                        </div>
-
-                        <!-- Forgot password link -->
-                        <div class="mb-3">
-                            <a href="#!" class="text-decoration-none">Forgot password?</a>
-                        </div>
-
-                        <!-- Submit button -->
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Login</button>
                             <span>Not registered?

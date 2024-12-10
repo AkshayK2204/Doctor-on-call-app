@@ -40,12 +40,14 @@ public class SecurityConfig {
                         .loginProcessingUrl("/process-login")
                         .permitAll()
                 )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/customLogin?logout=true")
-//                        .invalidateHttpSession(true)
-//                        .deleteCookies("JSESSIONID")
-//                        .permitAll())
+
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/customLogin?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll())
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1)
@@ -82,28 +84,3 @@ public class SecurityConfig {
 }
 
 
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        System.out.println("User Details Service invoked...");
-//        UserDetails user = User.builder()
-//                .username("patient1@gmail.com")
-//                .password("$2a$12$4JqpuJ1A2a.lfMfhx77COeSt5r35zfk.JP.APkA/PfYD7MQRmL2cy")
-//                .roles("PATIENT")
-//                .build();
-//
-//        UserDetails doctor = User.builder()
-//                .username("doctor@gmail.com")
-//                .password("$2a$12$OWD13V3RYPo5Z9YW.HCqq.wXYoU2tleVgiyK6/h9pufth8xONNQXS")
-//                .roles("DOCTOR")
-//                .build();
-//
-//            UserDetails admin = User.builder()
-//                    .username("admin@gmail.com")
-//                    .password(bCryptPasswordEncoder.encode("admin"))
-//                    .roles("ADMIN","DOCTOR","PATIENT")
-//                    .build();
-//
-//
-//        return new InMemoryUserDetailsManager(user, doctor);
-//    }
