@@ -73,6 +73,15 @@ public class DoctorService extends UserService {
         return doctorOptional.orElse(null);
     }
 
+
+
+
+    /**
+     * Updates the doctor's availability list based on the given appointment status.
+     * If the appointment status is CANCELLED, adds the appointment's start time to the doctor's availability.
+     * If the appointment status is not CANCELLED, removes the appointment's start time from the doctor's availability.
+     * @param appointment the appointment to update availability for
+     */
     @Transactional
     public void updateAvailability(Appointment appointment) {
         System.out.println("Updating availability...");
@@ -99,35 +108,6 @@ public class DoctorService extends UserService {
             });
         doctor.setAvailabilityList(availabilityList);
         doctorRepository.save(doctor);
-
     }
-
-
-    public void deleteAvailability(Long availabilityId) {
-
-        availabilityRepository.findById(availabilityId).ifPresent(availability -> {
-            List<Appointment> appointments = appointmentRepository.findByDoctorAndDate(availability.getDoctor(),availability.getDate());
-            appointments.forEach(appointment -> {
-                appointment.setStatus(APP_STATUS.CANCELLED);
-                appointmentRepository.save(appointment);
-            });
-        });
-        availabilityRepository.deleteById(availabilityId);
-    }
-
-
-    public void deleteOpenTime(Long availabilityId, LocalTime time) {
-        Optional<Availability> optionalAvailability = availabilityRepository.findById(availabilityId);
-        if (optionalAvailability.isPresent()) {
-            Availability availability = optionalAvailability.get();
-            List<LocalTime> openTimes = availability.getOpenTimes();
-            if (!openTimes.remove(time)) {
-                throw new IllegalArgumentException("Time slot not available for removal");
-            }
-            availability.setOpenTimes(openTimes);
-            availabilityRepository.save(availability);
-        }
-    }
-
 }
 

@@ -37,7 +37,9 @@ public class AppointmentService {
 
     @Transactional
     public Long bookAppointment(AppReqDTO appReqDTO, Doctor doctor, Patient patient) {
+        System.out.println("Entering bookAppointment service method");
         Appointment appointment = getAppointment(appReqDTO, doctor, patient);
+        System.out.println("Appointment details before saving: " + appointment.toString());
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
         if (savedAppointment.getAppId() != null) {

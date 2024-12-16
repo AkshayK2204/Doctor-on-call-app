@@ -5,6 +5,7 @@ import com.akshay.project.DoctorOnCall.entity.Appointment;
 import com.akshay.project.DoctorOnCall.entity.Availability;
 import com.akshay.project.DoctorOnCall.entity.Doctor;
 import com.akshay.project.DoctorOnCall.service.AppointmentService;
+import com.akshay.project.DoctorOnCall.service.AvailabilityService;
 import com.akshay.project.DoctorOnCall.service.DoctorService;
 import com.akshay.project.DoctorOnCall.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,15 +23,14 @@ public class DoctorController {
 
     private final AppointmentService appointmentService;
     private final DoctorService doctorService;
-    private final PatientService patientService;
-
+    private final AvailabilityService availabilityService;
 
 
     @Autowired
-    public DoctorController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
+    public DoctorController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService,AvailabilityService availabilityService) {
         this.appointmentService = appointmentService;
         this.doctorService = doctorService;
-        this.patientService = patientService;
+        this.availabilityService = availabilityService;
     }
 
     @Operation(summary = "Displays the doctor's dashboard with appointment statistics and details")
@@ -63,10 +63,6 @@ public class DoctorController {
     public String getAvailableSlot(@PathVariable Long doctor_id, Model model){
         Doctor doctor = doctorService.findById(doctor_id);
         List<Availability> availabilityList = doctor.getAvailabilityList();
-        if (availabilityList == null || availabilityList.isEmpty()) {
-            System.out.println("No availability found for doctor with ID: " + doctor_id);
-        }
-        System.out.println(availabilityList);
         model.addAttribute("availabilityList",availabilityList);
         return "openTimesList";
     }
@@ -94,13 +90,13 @@ public class DoctorController {
 
     @GetMapping("/doctor/{doctor_id}/open-times/delete/{availability_id}")
     public String deleteAvailability(@PathVariable Long doctor_id,@PathVariable Long availability_id,Model model){
-        doctorService.deleteAvailability(availability_id);
+        availabilityService.deleteAvailability(availability_id);
         return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
     }
 
     @GetMapping("/doctor/{doctor_id}/open-times/delete/{availability_id}/{time}")
     public String deleteOpenTime(@PathVariable Long doctor_id, @PathVariable Long availability_id, @PathVariable LocalTime time, Model model){
-        doctorService.deleteOpenTime(availability_id,time);
+        availabilityService.deleteOpenTime(availability_id,time);
         return String.format("redirect:/doctor/{doctor_id}/open-times/view",doctor_id);
     }
 

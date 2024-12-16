@@ -11,6 +11,7 @@
     <div th:if="${message}">
         <div class="alert alert-danger" th:text="${message}"></div>
     </div>
+
     <form th:action="@{/user/{patient_id}/appointments/{app_id}/edit(patient_id=${patient_id},app_id=${app_id})}"
           th:object="${appUpdateDTO}" method="post">
 
@@ -77,6 +78,5 @@
         </tbody>
     </table>
 </div>
-
 </body>
 </html>
